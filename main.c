@@ -1,7 +1,7 @@
 // Use shell implementation for demo
-#include "src/tshell.c"
+#include "src/console.h"
 
 int main() {
-
+	read();
 	return 0;
 }
