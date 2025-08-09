@@ -3,12 +3,12 @@
 
 #define INITIAL_INPUT_SIZE 16
 
-struct Input {
+struct buffer {
 	char *value;
 	int size;
 	int capacity;
 };
-typedef struct Input Input;
+typedef struct buffer* buffer_ptr;
 
 void read();
 

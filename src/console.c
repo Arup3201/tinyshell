@@ -9,14 +9,14 @@
 
 #include "console.h"
 
-void initInput(Input *in) {
-	in = (Input*)malloc(sizeof(Input));
+void init_buffer(buffer_ptr in) {
+	in = (buffer_ptr)malloc(sizeof(struct buffer));
 	in->capacity = INITIAL_INPUT_SIZE;
 	in->value = malloc(in->capacity);
 	in->size = 0;
 }
 
-void appendChar(Input *in, char ch) {
+void append_char(buffer_ptr in, char ch) {
 	if(in->size >= in->capacity) {
 		int newCap = in->capacity*2;
 		in = realloc(in, newCap);
@@ -28,15 +28,15 @@ void appendChar(Input *in, char ch) {
 }
 
 void read() {
-	Input *in;
-	initInput(in);
+	buffer_ptr in;
+	init_buffer(in);
 
 	char ch;
 	while(1) {
 		ch = fgetc(stdin);	
 
 		if(ch==EOF || ch=='\n') break;
-		appendChar(in, ch);
+		append_char(in, ch);
 	}
 
 	printf("%s\n", in->value);
