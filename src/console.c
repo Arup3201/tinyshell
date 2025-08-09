@@ -9,36 +9,38 @@
 
 #include "console.h"
 
-void init_buffer(buffer_ptr in) {
-	in = (buffer_ptr)malloc(sizeof(struct buffer));
-	in->capacity = INITIAL_INPUT_SIZE;
-	in->value = malloc(in->capacity);
-	in->size = 0;
+void init_buffer(buffer_ptr *in_ptr) {
+	*in_ptr = (buffer_ptr)malloc(sizeof(struct buffer));
+	(*in_ptr)->capacity = INITIAL_INPUT_SIZE;
+	(*in_ptr)->value = malloc((*in_ptr)->capacity);
+	(*in_ptr)->size = 0;
 }
 
-void append_char(buffer_ptr in, char ch) {
-	if(in->size >= in->capacity) {
-		int newCap = in->capacity*2;
-		in = realloc(in, newCap);
-		in->capacity = newCap;
+void append_char(buffer_ptr *in_ptr, char ch) {
+	if((*in_ptr)->size >= (*in_ptr)->capacity) {
+		int newCap = (*in_ptr)->capacity*2;
+		*in_ptr = realloc(*in_ptr, newCap);
+		(*in_ptr)->capacity = newCap;
 	}
 
-	in->value[in->size] = ch;
-	in->size += 1;
+	(*in_ptr)->value[(*in_ptr)->size] = ch;
+	(*in_ptr)->size += 1;
 }
 
 void read() {
 	buffer_ptr in;
-	init_buffer(in);
+	init_buffer(&in);
 
 	char ch;
 	while(1) {
 		ch = fgetc(stdin);	
-
-		if(ch==EOF || ch=='\n') break;
-		append_char(in, ch);
+		if(ch=='\n') break;
+		
+		append_char(&in, ch);
 	}
-
+	append_char(&in, '\0');
 	printf("%s\n", in->value);
+
+	free(in->value);
 	free(in);
 }
