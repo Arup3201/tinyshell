@@ -1,0 +1,56 @@
+#!~/dev/tinyshell/tsh
+
+# change current directory to HOME
+cd ~
+
+# change current directory to `path`
+cd path
+
+# prints a listing of a specific directory or file
+ls path
+
+# prints listing of the current working directory
+ls
+
+# print the current working directory
+pwd
+
+# change directory to root (`/`)
+cd /
+
+# go back to parent directory
+ch ..
+
+# copy a file
+cp old new
+
+# create a new directory
+mkdir path
+
+# moves (renames) a file or directory
+mv old new
+
+# removes a file
+rm path
+
+# remove a folder
+rmdir path
+rm -r path
+
+# display the content of a file
+cat path
+
+# display the first 10 lines of it's input
+head
+
+# display the last 10 lines of it's input
+tail
+
+# sorts it's inputs
+sort
+
+# counts lines, words and characters in it's input
+wc
+
+# runs tinyshell for the input script
+tsh file.tsh
