@@ -34,7 +34,7 @@ void read() {
 	char ch;
 	while(1) {
 		ch = fgetc(stdin);	
-		if(ch=='\n') break;
+		if(ch=='\n' || ch==EOF) break;
 		
 		append_char(&in, ch);
 	}
