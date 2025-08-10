@@ -1,0 +1,19 @@
+# !/dev/tsh
+# Expressions in tsh
+
+print 4 + 5 # 9 - add
+print 5 - 1 # 4 - subtract
+print 2 * 10 # 20 - mutiply
+print 10 / 2 # 5.0 - divide real
+print 10 // 2 # 5 - divide integer
+print 2 ** 10 # 1024 - power
+print -10 # -10 - negation
+
+print 1<<2 # 4 - left shift
+print 4>>2 # 1 - right shift
+print 0 | 1 # 1 - Bitwise-OR
+print 0 & 1 # 0 - Bitwise-AND
+print ~1 # 0 - Bitwise-NOT
+
+print 3 || 0 # 1 - OR
+print 3 && 0 # 0 - AND

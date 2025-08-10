@@ -1,4 +1,5 @@
-#!~/dev/tinyshell/tsh
+# !/dev/tsh
+# Basic commands supported by tsh
 
 # change current directory to HOME
 cd ~
