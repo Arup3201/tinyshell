@@ -7,8 +7,5 @@ var i = 0
 # create a variable `city` with value 'kolkata'
 var city = 'kolkata'
 
-# create a variable `PI` with value 3.141
-var PI = 3.141
-
 # create a variable `isOld` with value true
 var isOld = true

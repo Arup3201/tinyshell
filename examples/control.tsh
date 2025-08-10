@@ -1,0 +1,42 @@
+# !/dev/tsh
+# Control flow statements in tsh
+
+# if
+if ( expression ) command
+
+# if then
+if ( expression1 ) then
+	commands
+else if ( expression2 ) then
+	commands
+	...
+else 
+	commands
+endif
+
+# switch
+switch ( string )
+    case pattern1:
+        commands
+        breaksw
+    case pattern2:
+        commands
+        breaksw
+        ...
+    default:
+        commands
+        breaksw
+endsw
+
+# while
+while ( expression )
+    commands
+end
+
+# repeat
+repeat integer command
+
+# foreach
+foreach loop-variable ( list-of-values )
+    commands
+end
