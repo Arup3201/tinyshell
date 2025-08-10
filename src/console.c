@@ -6,6 +6,7 @@
 
 #include<stdlib.h>
 #include<stdio.h>
+#include<signal.h>
 
 #include "console.h"
 
@@ -55,21 +56,37 @@ void console_append_char_to_input(console_input_ptr *in_ptr, char ch) {
 	console_set_input_value(in_ptr, ch);
 }
 
-void console_read() {
+volatile sig_atomic_t status=0;
+void console_catch_terminate_event(int sig) {
+	status=sig;
+}
+
+int console_read() {
 	console_input_ptr in;
 	console_init_input(&in);
+	
+	// handle ctrl+c signal
+	if(signal(SIGINT, console_catch_terminate_event) == SIG_ERR) {
+		fputs("Error: failed to set signal handler for ctrl+c\n", stdout);
+		return EXIT_FAILURE;
+	}
 
 	char ch;
-	fputs("tsh > ", stdout);
 	while(1) {
-		ch = fgetc(stdin);	
-		if(ch=='\n' || ch==EOF) break;
-		
-		console_append_char_to_input(&in, ch);
-	}
-	console_append_char_to_input(&in, '\0');
-	printf("%s\n", console_get_input_value(in));
+		fputs("tsh > ", stdout);
+		while(1) {
+			ch = fgetc(stdin);	
+			if(ch=='\n') break;
 
-	free(in->value);
-	free(in);
+			console_append_char_to_input(&in, ch);
+		}
+		console_append_char_to_input(&in, '\0');
+		
+		if(status==SIGINT) {
+			fputs("Exiting tsh console\n", stdout);
+			free(in->value);
+			free(in);
+			return EXIT_SUCCESS;
+		}
+	}	
 }

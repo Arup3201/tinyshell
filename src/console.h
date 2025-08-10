@@ -14,6 +14,6 @@ char* console_get_input_value(console_input_ptr);
 int console_get_input_size(console_input_ptr);
 int console_get_input_capacity(console_input_ptr);
 
-void console_read();
+int console_read();
 
 #endif
