@@ -1,0 +1,23 @@
+# !/dev/tsh
+# Expressions in tsh
+
+var i = 10 / 5 * 2
+print $i # 1
+
+var i = 7 - 4 + 2
+print $i # 1
+
+var i = 1 << 2
+print $i # 4
+
+var i = 4 >> 2
+print $i # 1
+
+var i = 2 | 1
+print $i # 3
+
+var i = 2 & 1
+print $i # 0
+
+var i = ~1
+print $i # 0
