@@ -60,6 +60,7 @@ void console_read() {
 	console_init_input(&in);
 
 	char ch;
+	fputs("tsh > ", stdout);
 	while(1) {
 		ch = fgetc(stdin);	
 		if(ch=='\n' || ch==EOF) break;
