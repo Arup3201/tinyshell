@@ -1,15 +1,19 @@
 #ifndef CONSOLE_H
 #define CONSOLE_H
 
-#define INITIAL_INPUT_SIZE 16
+#define CONSOLE_INPUT_INIT_SIZE 16
 
-struct buffer {
+struct console_input {
 	char *value;
 	int size;
 	int capacity;
 };
-typedef struct buffer* buffer_ptr;
+typedef struct console_input* console_input_ptr;
 
-void read();
+char* console_get_input_value(console_input_ptr); 
+int console_get_input_size(console_input_ptr);
+int console_get_input_capacity(console_input_ptr);
+
+void console_read();
 
 #endif

@@ -2,6 +2,6 @@
 #include "src/console.h"
 
 int main() {
-	read();
+	console_read();
 	return 0;
 }

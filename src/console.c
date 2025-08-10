@@ -9,37 +9,65 @@
 
 #include "console.h"
 
-void init_buffer(buffer_ptr *in_ptr) {
-	*in_ptr = (buffer_ptr)malloc(sizeof(struct buffer));
-	(*in_ptr)->capacity = INITIAL_INPUT_SIZE;
+void console_set_input_value(console_input_ptr *, char);
+void console_set_input_size(console_input_ptr *, int);
+void console_set_input_capacity(console_input_ptr *, int);
+
+void console_init_input(console_input_ptr *in_ptr) {
+	*in_ptr = (console_input_ptr)malloc(sizeof(struct console_input));
+	console_set_input_capacity(in_ptr, CONSOLE_INPUT_INIT_SIZE);
 	(*in_ptr)->value = malloc((*in_ptr)->capacity);
-	(*in_ptr)->size = 0;
+	console_set_input_size(in_ptr, 0);
 }
 
-void append_char(buffer_ptr *in_ptr, char ch) {
-	if((*in_ptr)->size >= (*in_ptr)->capacity) {
-		int newCap = (*in_ptr)->capacity*2;
-		*in_ptr = realloc(*in_ptr, newCap);
-		(*in_ptr)->capacity = newCap;
-	}
-
+void console_set_input_value(console_input_ptr *in_ptr, char ch) {
 	(*in_ptr)->value[(*in_ptr)->size] = ch;
-	(*in_ptr)->size += 1;
+	console_set_input_size(in_ptr, (*in_ptr)->size+1);
 }
 
-void read() {
-	buffer_ptr in;
-	init_buffer(&in);
+void console_set_input_size(console_input_ptr *in_ptr, int size) {
+	(*in_ptr)->size = size;
+}
+
+void console_set_input_capacity(console_input_ptr *in_ptr, int capacity) {
+	(*in_ptr)->capacity = capacity;
+}
+
+char* console_get_input_value(console_input_ptr in) {
+	return in->value;
+}
+
+int console_get_input_size(console_input_ptr in) {
+	return in->size;
+}
+
+int console_get_input_capacity(console_input_ptr in) {
+	return in->capacity;
+}
+
+void console_append_char_to_input(console_input_ptr *in_ptr, char ch) {
+	if(console_get_input_size(*in_ptr) >= console_get_input_capacity(*in_ptr)) {
+		int new_cap = console_get_input_capacity(*in_ptr)*2;
+		*in_ptr = realloc(*in_ptr, new_cap);
+		console_set_input_capacity(in_ptr, new_cap);
+	}
+	
+	console_set_input_value(in_ptr, ch);
+}
+
+void console_read() {
+	console_input_ptr in;
+	console_init_input(&in);
 
 	char ch;
 	while(1) {
 		ch = fgetc(stdin);	
 		if(ch=='\n' || ch==EOF) break;
 		
-		append_char(&in, ch);
+		console_append_char_to_input(&in, ch);
 	}
-	append_char(&in, '\0');
-	printf("%s\n", in->value);
+	console_append_char_to_input(&in, '\0');
+	printf("%s\n", console_get_input_value(in));
 
 	free(in->value);
 	free(in);
