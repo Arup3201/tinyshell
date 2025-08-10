@@ -6,19 +6,23 @@
 
 #include<stdlib.h>
 #include<stdio.h>
+#include<string.h>
 #include<signal.h>
 
 #include "console.h"
-
-void console_set_input_value(console_input_ptr *, char);
-void console_set_input_size(console_input_ptr *, int);
-void console_set_input_capacity(console_input_ptr *, int);
 
 void console_init_input(console_input_ptr *in_ptr) {
 	*in_ptr = (console_input_ptr)malloc(sizeof(struct console_input));
 	console_set_input_capacity(in_ptr, CONSOLE_INPUT_INIT_SIZE);
 	(*in_ptr)->value = malloc((*in_ptr)->capacity);
 	console_set_input_size(in_ptr, 0);
+}
+
+void console_reset_input(console_input_ptr *in_ptr) {
+	console_set_input_size(in_ptr, 0);
+	console_set_input_capacity(in_ptr, CONSOLE_INPUT_INIT_SIZE);
+	(*in_ptr)->value = realloc((*in_ptr)->value, CONSOLE_INPUT_INIT_SIZE);
+	memset((*in_ptr)->value, '\0', console_get_input_capacity(*in_ptr));
 }
 
 void console_set_input_value(console_input_ptr *in_ptr, char ch) {
@@ -49,7 +53,7 @@ int console_get_input_capacity(console_input_ptr in) {
 void console_append_char_to_input(console_input_ptr *in_ptr, char ch) {
 	if(console_get_input_size(*in_ptr) >= console_get_input_capacity(*in_ptr)) {
 		int new_cap = console_get_input_capacity(*in_ptr)*2;
-		*in_ptr = realloc(*in_ptr, new_cap);
+		(*in_ptr)->value = realloc((*in_ptr)->value, new_cap);
 		console_set_input_capacity(in_ptr, new_cap);
 	}
 	
@@ -75,13 +79,19 @@ int console_read() {
 	while(1) {
 		fputs("tsh > ", stdout);
 		while(1) {
-			ch = fgetc(stdin);	
+			ch = fgetc(stdin);
 			if(ch=='\n') break;
 
 			console_append_char_to_input(&in, ch);
 		}
 		console_append_char_to_input(&in, '\0');
 		
+		// code to execute the line
+		printf("Echo: %s\n", in->value);
+
+		// clean up the console
+		console_reset_input(&in);
+
 		if(status==SIGINT) {
 			fputs("Exiting tsh console\n", stdout);
 			free(in->value);
