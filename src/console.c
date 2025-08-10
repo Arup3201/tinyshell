@@ -7,7 +7,6 @@
 #include<stdlib.h>
 #include<stdio.h>
 #include<string.h>
-#include<signal.h>
 
 #include "console.h"
 
@@ -23,6 +22,11 @@ void console_reset_input(console_input_ptr *in_ptr) {
 	console_set_input_capacity(in_ptr, CONSOLE_INPUT_INIT_SIZE);
 	(*in_ptr)->value = realloc((*in_ptr)->value, CONSOLE_INPUT_INIT_SIZE);
 	memset((*in_ptr)->value, '\0', console_get_input_capacity(*in_ptr));
+}
+
+void console_free_input(console_input_ptr *in_ptr) {
+	free((*in_ptr)->value);
+	free(*in_ptr);
 }
 
 void console_set_input_value(console_input_ptr *in_ptr, char ch) {
@@ -50,53 +54,25 @@ int console_get_input_capacity(console_input_ptr in) {
 	return in->capacity;
 }
 
-void console_append_char_to_input(console_input_ptr *in_ptr, char ch) {
+void append_char_to_input(console_input_ptr *in_ptr, char ch) {
 	if(console_get_input_size(*in_ptr) >= console_get_input_capacity(*in_ptr)) {
 		int new_cap = console_get_input_capacity(*in_ptr)*2;
 		(*in_ptr)->value = realloc((*in_ptr)->value, new_cap);
 		console_set_input_capacity(in_ptr, new_cap);
 	}
-	
+
 	console_set_input_value(in_ptr, ch);
 }
 
-volatile sig_atomic_t status=0;
-void console_catch_terminate_event(int sig) {
-	status=sig;
-}
 
-int console_read() {
-	console_input_ptr in;
-	console_init_input(&in);
-	
-	// handle ctrl+c signal
-	if(signal(SIGINT, console_catch_terminate_event) == SIG_ERR) {
-		fputs("Error: failed to set signal handler for ctrl+c\n", stdout);
-		return EXIT_FAILURE;
-	}
-
+void console_read_line(console_input_ptr *in_ptr) {
 	char ch;
+	fputs("tsh > ", stdout);
 	while(1) {
-		fputs("tsh > ", stdout);
-		while(1) {
-			ch = fgetc(stdin);
-			if(ch=='\n') break;
+		ch = fgetc(stdin);
+		if(ch=='\n') break;
 
-			console_append_char_to_input(&in, ch);
-		}
-		console_append_char_to_input(&in, '\0');
-		
-		// code to execute the line
-		printf("Echo: %s\n", in->value);
-
-		// clean up the console
-		console_reset_input(&in);
-
-		if(status==SIGINT) {
-			fputs("Exiting tsh console\n", stdout);
-			free(in->value);
-			free(in);
-			return EXIT_SUCCESS;
-		}
-	}	
+		append_char_to_input(in_ptr, ch);
+	}
+	append_char_to_input(in_ptr, '\0');
 }
