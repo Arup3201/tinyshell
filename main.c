@@ -3,6 +3,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<signal.h>
+#include<string.h>
 #include<readline/readline.h>
 #include<readline/history.h>
 
@@ -21,11 +22,19 @@ int main() {
 		return 1;
 	}
 
+	// initialize history
+	using_history();
+
 	while(1) {
 		cmd = readline("$> ");
-		
-		// Parse, expand and execute cmd
-		printf("Echo: %s\n", cmd);
+
+		if(strlen(cmd) > 0) {
+			// add command to history
+			add_history(cmd);
+
+			// Parse, expand and execute cmd
+			printf("Echo: %s\n", cmd);
+		}
 
 		free(cmd);
 	}
