@@ -1,12 +1,10 @@
-CFLAGS = -Wall
+CFLAGS = -Wall -o
+DEBUGFLAGS = -Wall -g -o
+LIBS = -lreadline
 
-tsh.out: main.c src/console.c src/console.h
-	gcc -c src/console.c -o builds/console.out
-	gcc main.c -o tsh.out builds/*.out
+tsh.out: main.c
+	gcc main.c $(LIBS) $(CFLAGS) tsh.out
 
 debug: 
-	gcc -c src/console.c -g -o builds/console.out
-	gcc main.c -g -o tsh.out builds/*.out
+	gcc main.c $(LIBS) $(DEBUGFLAGS) tsh.out
 
-clean:
-	rm -rf tsh.out builds/*.out
